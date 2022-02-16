@@ -1,0 +1,31 @@
+{
+  "name": "gfx-utils",
+  "version": "1.0.0",
+  "description": "A bunch of typescript/js utils for JS game development",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danman113/gfx-utils.git"
+  },
+  "keywords": [
+    "utils",
+    "typescript",
+    "graphics",
+    "gfx",
+    "lerp",
+    "random",
+    "gl-matrix"
+  ],
+  "author": "danman113",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/danman113/gfx-utils/issues"
+  },
+  "homepage": "https://github.com/danman113/gfx-utils#readme",
+  "dependencies": {
+    "gl-matrix": "^3.4.3"
+  }
+}
