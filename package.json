@@ -4,10 +4,6 @@
   "description": "A bunch of typescript/js utils for JS game development",
   "main": "./dist/gfx-utils.js",
   "type": "module",
-  "exports": {
-    "node": "./dist/gfx-utils.js",
-    "browser": "./dist/gfx-utils.browser.js"
-  },
   "files": [
     "dist/",
     "src/"
