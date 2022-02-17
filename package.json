@@ -2,12 +2,22 @@
   "name": "gfx-utils",
   "version": "1.0.0",
   "description": "A bunch of typescript/js utils for JS game development",
-  "main": "index.js",
+  "main": "./dist/gfx-utils.js",
+  "type": "module",
+  "exports": {
+    "node": "./dist/gfx-utils.js",
+    "browser": "./dist/gfx-utils.browser.js"
+  },
+  "files": [
+    "dist/",
+    "src/"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run build:minified && npm run build:whole",
+    "build": "npm run build:minified && npm run build:whole && npm run build:browser",
     "build:minified": "esbuild ./src/index.js --bundle --minify --platform=node --outfile=dist/gfx-utils.min.js",
-    "build:whole": "esbuild ./src/index.js --bundle --platform=node --outfile=dist/gfx-utils.js"
+    "build:whole": "esbuild ./src/index.js --bundle --platform=node --outfile=dist/gfx-utils.js",
+    "build:browser": "esbuild ./src/browser.js --bundle --minify --target=chrome58,firefox57,safari11 --outfile=dist/gfx-utils.browser.js"
   },
   "repository": {
     "type": "git",

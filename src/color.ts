@@ -1,4 +1,4 @@
-import { clamp } from './math/util'
+import { clamp, mapValue } from './math/util'
 
 const hue2rgb = (p: number, q: number, t: number) => {
   if (t < 0) t += 1
@@ -10,13 +10,16 @@ const hue2rgb = (p: number, q: number, t: number) => {
 }
 
 /**
- * Converts HSL values (0.0 -> 1.0) to rgb
+ * Converts HSL values (0.0 -> 1.0) | () to rgb
  * @param h 
  * @param s 
  * @param l 
  * @returns 
  */
 export const hslToRgb = (h: number, s: number, l: number) => {
+  if (h > 1) h = mapValue(h, 0, 360, 0, 1)
+  if (s > 1) s = mapValue(s, 0, 100, 0, 1)
+  if (l > 1) l = mapValue(l, 0, 100, 0, 1)
   // h,s,l ranges are in 0.0 - 1.0
   h = clamp(h, 0, 1)
   s = clamp(s, 0, 1)
