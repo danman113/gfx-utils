@@ -13,6 +13,12 @@ export interface Mouse {
   wheelDeltaY: number
 }
 
+export const createCanvas = (parent: HTMLElement = document.body): HTMLCanvasElement => {
+  const canvas = document.createElement('canvas')
+  parent.appendChild(canvas)
+  return canvas
+}
+
 export const setCanvasDimensions = (
   element: HTMLCanvasElement,
   maxWidth: number,

@@ -14,6 +14,8 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf dist/",
+    "prepare": "npm run clean && npm run build",
     "build": "npm run build:minified && npm run build:whole && npm run build:browser",
     "build:minified": "esbuild ./src/index.js --bundle --minify --platform=node --outfile=dist/gfx-utils.min.js",
     "build:whole": "esbuild ./src/index.js --bundle --platform=node --outfile=dist/gfx-utils.js",

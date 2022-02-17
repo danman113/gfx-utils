@@ -1,4 +1,4 @@
-export const hashStr = (str: string) => {
+export const hashStr = (str: string): number => {
   let hash = 0,
     i,
     chr
@@ -10,17 +10,7 @@ export const hashStr = (str: string) => {
   return hash
 }
 
-export const hashArray = (arr: number[]) => {
-  let hash = 0,
-    i
-  for (i = 0; i < arr.length; i++) {
-    hash = (hash << 5) - hash + arr[i]
-    hash |= 0
-  }
-  return hash
-}
-
-export const hashNumber = (arr: number[]) => {
+export const hashArray = (arr: number[]): number => {
   let hash = 0,
     i
   for (i = 0; i < arr.length; i++) {

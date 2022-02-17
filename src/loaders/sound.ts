@@ -1,14 +1,17 @@
 import { Loadable } from './index'
 
 type HowlerLikeCallback = () => void | ((id: any, err: any) => void)
-interface PlayableSound {
+export interface PlayableSound {
   new({src: string}): PlayableSound
-  on(eventName: string, cb: HowlerLikeCallback)
+  on(eventName: 'load' | 'loaderror', cb: HowlerLikeCallback)
   play(): void
   playing(): boolean
   volume(n: number): number
 }
 
+/**
+ * Creates a howler-like sound instance that can be loaded with `await sound.load`
+ */
 export default class Sound<SoundClass extends PlayableSound> implements Loadable {
   public sound: SoundClass
   public load: Promise<Sound<SoundClass>>

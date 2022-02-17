@@ -10,6 +10,8 @@ A bunch of typescript/js utils for JS game development
 ## Loaders
 * Image Loaders
 * Howler-like Sound Loaders
+## Canvas
+* Make Fullscreen canvas
 ## Tween Manager
 * Type-safe tweens on properties  
 ## Color Utils
