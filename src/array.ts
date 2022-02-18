@@ -41,4 +41,11 @@ export class RingBuffer<T> {
   peekFront(): T {
     return this.data[this.start]
   }
+
+  forEach(cb: (val: T, index?: number, arr?: T[]) => void) {
+    for (let i = 0, start = this.start; i < this.length; start = ((start + 1) % this.size), i++) {
+      const val = this.data[start]
+      cb(val, i, this.data)
+    }
+  }
 }
