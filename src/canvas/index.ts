@@ -185,11 +185,15 @@ export type KeyCallback = (n: string) => void
 export const setupKeyboardHandler = (
   element: HTMLCanvasElement | Window,
   onKeyDown?: KeyCallback,
-  onKeyUp?: KeyCallback
+  onKeyUp?: KeyCallback,
+  tabIndex: number = 1
 ): (() => KeyPollReturnType) => {
   const pressed: KeySet = new Set()
   const held: KeySet = new Set()
   const up: KeySet = new Set()
+  if (element instanceof HTMLCanvasElement) {
+    (element as HTMLCanvasElement).tabIndex = tabIndex
+  }
   element.addEventListener('keydown', (e: Event) => {
     e.preventDefault()
     const { code: key } = e as KeyboardEvent
