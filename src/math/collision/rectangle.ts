@@ -1,7 +1,41 @@
 import { vec2 } from 'gl-matrix'
 
 export class Rectangle {
-  constructor(public x: number, public y: number, public width: number, public height: number) {}
+  min = vec2.create()
+  max = vec2.create()
+  get x() {
+    return this.min[0]
+  }
+
+  set x(newX: number) {
+    this.min[0] = newX
+  }
+  get y() {
+    return this.min[1]
+  }
+  set y(newY: number) {
+    this.min[1] = newY
+  }
+
+  get width() {
+    return this.max[0] - this.min[0]
+  }
+
+  set width(newWidth: number) {
+    this.max[0] = this.min[0] + newWidth
+  }
+  get height() {
+    return this.max[1] - this.min[1]
+  }
+  set height(newHeight: number) {
+    this.max[1] = this.min[1] + newHeight
+  }
+  constructor(x: number, y: number, width: number, height: number) {
+    this.min[0] = x
+    this.min[1] = y
+    this.width = width
+    this.height = height
+  }
 }
 
 export const copy = (self: Rectangle, that: Rectangle): void => {
