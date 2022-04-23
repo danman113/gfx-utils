@@ -8,13 +8,17 @@ export class Rectangle {
   }
 
   set x(newX: number) {
+    const oldWidth = this.width 
     this.min[0] = newX
+    this.width = oldWidth
   }
   get y() {
     return this.min[1]
   }
   set y(newY: number) {
+    const oldHeight = this.height
     this.min[1] = newY
+    this.height = oldHeight
   }
 
   get width() {
