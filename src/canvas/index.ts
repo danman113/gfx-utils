@@ -35,8 +35,8 @@ export const setCanvasDimensions = (
 
 const getWindowDimensions = (highDPI: boolean = false) => {
   const dpi = highDPI ? window.devicePixelRatio : 1
-  let width = window.innerWidth * dpi
-  let height = window.innerHeight * dpi
+  let width = window.innerWidth
+  let height = window.innerHeight
   return [width, height]
 }
 
