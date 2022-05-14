@@ -22,10 +22,12 @@ export const createCanvas = (parent: HTMLElement = document.body): HTMLCanvasEle
 export const setCanvasDimensions = (
   element: HTMLCanvasElement,
   maxWidth: number,
-  maxHeight: number
+  maxHeight: number,
+  highDPI: boolean = false
 ) => {
-  element.width = maxWidth
-  element.height = maxHeight
+  const dpi = highDPI ? window.devicePixelRatio : 1
+  element.width = maxWidth * dpi
+  element.height = maxHeight * dpi
   element.style.width = String(maxWidth) + 'px'
   element.style.height = String(maxHeight) + 'px'
 }
@@ -38,14 +40,15 @@ const getWindowDimensions = () => {
 
 export const fullscreenCanvas = (
   element: HTMLCanvasElement,
-  hook: (e: UIEvent) => void = () => {}
+  hook: (e: UIEvent) => void = () => {},
+  highDPI: boolean = false,
 ) => {
   let dimensions = getWindowDimensions()
-  setCanvasDimensions(element, dimensions[0], dimensions[1])
+  setCanvasDimensions(element, dimensions[0], dimensions[1], highDPI)
 
   window.addEventListener('resize', (e) => {
     dimensions = getWindowDimensions()
-    setCanvasDimensions(element, dimensions[0], dimensions[1])
+    setCanvasDimensions(element, dimensions[0], dimensions[1], highDPI)
     hook(e)
   })
   return () => dimensions
