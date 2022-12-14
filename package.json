@@ -1,6 +1,6 @@
 {
   "name": "gfx-utils",
-  "version": "2.3.3",
+  "version": "2.3.2",
   "description": "A bunch of typescript/js utils for JS game development",
   "main": "./dist/gfx-utils.js",
   "type": "module",
