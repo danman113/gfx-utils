@@ -19,6 +19,13 @@ export const createCanvas = (parent: HTMLElement = document.body): HTMLCanvasEle
   return canvas
 }
 
+/**
+ * Sets the dimensions of an HTML canvas element.
+ * @param {HTMLCanvasElement} element The canvas element to set the dimensions of.
+ * @param {number} maxWidth The maximum width of the canvas element.
+ * @param {number} maxHeight The maximum height of the canvas element.
+ * @param {boolean} [highDPI=false] Whether to enable high DPI mode.
+*/
 export const setCanvasDimensions = (
   element: HTMLCanvasElement,
   maxWidth: number,
@@ -40,6 +47,13 @@ const getWindowDimensions = (highDPI: boolean = false) => {
   return [width, height]
 }
 
+/**
+ * Makes an HTML canvas element fullscreen and resizes it whenever the window is resized.
+ * @param {HTMLCanvasElement} element The canvas element to make fullscreen.
+ * @param {function(e: UIEvent): void} [hook] A callback function that will be called whenever the window is resized.
+ * @param {boolean} [highDPI=false] Whether to enable high DPI mode.
+ * @return {() => [number, number]} A function that returns the current dimensions of the canvas element.
+ */
 export const fullscreenCanvas = (
   element: HTMLCanvasElement,
   hook: (e: UIEvent) => void = () => {},
@@ -56,6 +70,11 @@ export const fullscreenCanvas = (
   return () => dimensions
 }
 
+/**
+ * Returns a function that polls the current state of the mouse related to `element`
+ * @param element HTML element to poll mouse events from
+ * @returns PollingFunction
+ */
 export const setupMouseHandlers = (element: HTMLCanvasElement): (() => Mouse) => {
   let wheelDeltaX: number
   let wheelDeltaY: number
@@ -187,8 +206,17 @@ export interface KeyPollReturnType {
   up: KeySet
 }
 export type KeyCallback = (n: string) => void
+/**
+ * Returns a function that will tell you all of the keys currently pressed, held,
+ * and released this frame.
+ * @param element HTML element to poll key events from
+ * @param onKeyDown Callback that gets fired every time a key is pressed
+ * @param onKeyUp Callback that gets fired every time a key is pressed
+ * @param tabIndex TabIndex to assign to the element if it's a canvas
+ * @returns PollingFunction
+ */
 export const setupKeyboardHandler = (
-  element: HTMLCanvasElement | Window,
+  element: HTMLElement | Window,
   onKeyDown?: KeyCallback,
   onKeyUp?: KeyCallback,
   tabIndex: number = 1
@@ -231,6 +259,14 @@ export const setupKeyboardHandler = (
 }
 
 export const MAX_FRAME_TIME = 5
+/**
+ * Returns a function that will requestAnimationFrame `cb`, passing in delta time
+ * normalized to `fps`.
+ * 
+ * @param cb Callback that will be called every animation frame
+ * @param fps number of time cb will be fired per second
+ * @returns function that will kick of requestAnimationFrame
+ */
 export const draw = (cb: (dt: number) => void, fps: number = 60) => {
   let then = 0
   const fpsQuotient = 1000 / fps

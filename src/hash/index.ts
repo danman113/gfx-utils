@@ -1,21 +1,23 @@
+/**
+ * Simple 32 bit hash on a string
+ * @param str String to hash
+ * @returns 32bit unsigned number
+ */
 export const hashStr = (str: string): number => {
-  let hash = 0,
-    i,
-    chr
-  for (i = 0; i < str.length; i++) {
-    chr = str.charCodeAt(i)
-    hash = (hash << 5) - hash + chr
-    hash |= 0
-  }
-  return hash
+  let hash = 0
+  for (let i = 0; i < str.length; ++i)
+    hash = Math.imul(31, hash) + str.charCodeAt(i)
+  return hash | 0
 }
 
+/**
+ * Simple 32 bit hash on number array
+ * @param arr Array of numbers to hash
+ * @returns 32bit unsigned number
+ */
 export const hashArray = (arr: number[]): number => {
-  let hash = 0,
-    i
-  for (i = 0; i < arr.length; i++) {
-    hash = (hash << 5) - hash + arr[i]
-    hash |= 0
-  }
-  return hash
+  let hash = 0
+  for (let i = 0; i < arr.length; i++)
+    hash = Math.imul(31, hash) + arr[i]
+  return hash | 0
 }
