@@ -70,6 +70,11 @@ export const fullscreenCanvas = (
   return () => dimensions
 }
 
+// I have to do this cause IOS reuses touch objects
+const copyTouch = ({ clientX, clientY, identifier, force, rotationAngle, radiusX, radiusY }: Touch) => ({
+  clientX, clientY, identifier, force, rotationAngle, radiusX, radiusY
+}) as Touch
+
 /**
  * Returns a function that polls the current state of the mouse related to `element`
  * @param element HTML element to poll mouse events from
@@ -139,7 +144,7 @@ export const setupMouseHandlers = (element: HTMLCanvasElement): (() => Mouse) =>
   element.addEventListener('touchstart', (e) => {
     e.preventDefault()
     for (let i = 0; i < e.changedTouches.length; i++) {
-      const touch = Object.assign({}, e.changedTouches[i])
+      const touch = copyTouch(e.changedTouches[i])
       downThisPoll = true
       mouse.touches.set(touch.identifier, touch)
     }
@@ -148,7 +153,7 @@ export const setupMouseHandlers = (element: HTMLCanvasElement): (() => Mouse) =>
   element.addEventListener('touchmove', (e) => {
     e.preventDefault()
     for (let i = 0; i < e.changedTouches.length; i++) {
-      const touch = Object.assign({}, e.changedTouches[i])
+      const touch = copyTouch(e.changedTouches[i])
       mouse.touches.set(touch.identifier, touch)
     }
   })
