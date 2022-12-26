@@ -139,7 +139,7 @@ export const setupMouseHandlers = (element: HTMLCanvasElement): (() => Mouse) =>
   element.addEventListener('touchstart', (e) => {
     e.preventDefault()
     for (let i = 0; i < e.changedTouches.length; i++) {
-      const touch = e.changedTouches[i]
+      const touch = Object.assign({}, e.changedTouches[i])
       downThisPoll = true
       mouse.touches.set(touch.identifier, touch)
     }
@@ -148,7 +148,7 @@ export const setupMouseHandlers = (element: HTMLCanvasElement): (() => Mouse) =>
   element.addEventListener('touchmove', (e) => {
     e.preventDefault()
     for (let i = 0; i < e.changedTouches.length; i++) {
-      const touch = e.changedTouches[i]
+      const touch = Object.assign({}, e.changedTouches[i])
       mouse.touches.set(touch.identifier, touch)
     }
   })
