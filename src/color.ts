@@ -10,7 +10,7 @@ const hue2rgb = (p: number, q: number, t: number) => {
 }
 
 /**
- * Converts HSL values (0.0 -> 1.0) | () to rgb
+ * Converts HSL values (0.0 -> 1.0 x 3) | (0 -> 360, 0 -> 100, 0->100) to rgb (0.0 -> 1.0 x 3)
  * @param h 
  * @param s 
  * @param l 

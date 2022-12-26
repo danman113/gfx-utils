@@ -6,7 +6,7 @@ export interface Mouse {
   position: vec2
   buttons: boolean[]
   buttonsClicked: boolean[]
-  touches: Map<Number, Touch>
+  touches: Map<number, Touch>
   action: boolean
   clicked: boolean
   wheelDeltaX: number
@@ -44,7 +44,7 @@ const getWindowDimensions = (highDPI: boolean = false) => {
   const dpi = highDPI ? window.devicePixelRatio : 1
   let width = window.innerWidth
   let height = window.innerHeight
-  return [width, height]
+  return [width, height] as [number, number]
 }
 
 /**
