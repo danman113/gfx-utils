@@ -37,7 +37,7 @@ export const setCanvasDimensions = (
   element.height = maxHeight * dpi
   element.style.width = String(maxWidth) + 'px'
   element.style.height = String(maxHeight) + 'px'
-  element.getContext('2d').scale(dpi, dpi)
+  element.getContext('2d')?.scale(dpi, dpi)
 }
 
 const getWindowDimensions = (highDPI: boolean = false) => {

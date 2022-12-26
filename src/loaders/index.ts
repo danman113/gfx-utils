@@ -1,5 +1,5 @@
 export interface Loadable {
-  loaded: boolean
+  loaded: boolean | null
   load: Promise<any>
 }
 

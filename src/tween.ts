@@ -166,7 +166,7 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
       const val = props[key]
       const currentValue = this.currentTween.target[key]
       if (typeof currentValue === 'number' && currentValue !== val) {
-        this.change(key, fiddleFunction).from(currentValue).to(val).and()
+        this.change(key, fiddleFunction).from(currentValue).to(val as number).and()
       }
     }
     return this
@@ -282,7 +282,7 @@ export class TweenManager<T> {
   }
 
   get(component: T) {
-    return this.tweenMap.get(component)[1]
+    return this.tweenMap.get(component)?.[1]
   }
 
   run(dt: number) {

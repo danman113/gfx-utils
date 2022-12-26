@@ -9,14 +9,14 @@ export default class WeightedMap<T> {
 
   sum(key: T, amount: number) {
     this.size += amount
-    if (this.weightSet.has(key)) this.weightSet.set(key, this.weightSet.get(key) + amount)
+    if (this.weightSet.has(key)) this.weightSet.set(key, this.weightSet.get(key) as number + amount)
     else this.weightSet.set(key, amount)
   }
 
   set(key: T, amount: number) {
     let prevWeight = 0
     if (this.weightSet.has(key)) {
-      prevWeight = this.weightSet.get(key)
+      prevWeight = this.weightSet.get(key) as number
       this.weightSet.set(key, amount)
     } else {
       this.weightSet.set(key, amount)
