@@ -188,6 +188,7 @@ export const setupMouseHandlers = (element: HTMLCanvasElement): (() => Mouse) =>
       mouse.position[0] = mouse.x
       mouse.position[1] = mouse.y
       mouse.buttons[0] = true
+      break
     }
 
     if (!clickedThisPoll && mouse.buttonsClicked) mouse.buttonsClicked.length = 0
