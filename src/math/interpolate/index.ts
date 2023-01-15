@@ -10,5 +10,5 @@ export const interpolate = (
   return b * v + a * (1 - v)
 }
 
-export { InterpolationFunction } from './functions'
+export type { InterpolationFunction } from './functions'
 export * as InterpolationFunctions from './functions'

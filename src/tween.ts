@@ -4,12 +4,12 @@ import { linear } from './math/interpolate/functions'
 const noop = () => {}
 export class TweenError extends Error {}
 export default class Tween<T, K extends keyof T, E extends T[K]> {
-  public _from: number
-  public _to: number
+  public _from: number = 0
+  public _to: number = 0
   public duration: number = 0
-  public key: K
+  public key: K | undefined
   public interpolation: InterpolationFunction = linear
-  public fiddleFunction: (n: number) => E // Need this to do (..., 'color', (n: number) => `rgb(${n}, 0, 0)`)
+  public fiddleFunction: ((n: number) => E) | undefined // Need this to do (..., 'color', (n: number) => `rgb(${n}, 0, 0)`)
   public donefn: CallableFunction = noop
   constructor(public target: T) {}
 
@@ -60,7 +60,7 @@ export class PlayableTween<T, K extends keyof T, E extends T[K]> extends Tween<T
   run(dt: number) {
     if (this.counter >= 0 && this.counter < this.duration && this.fiddleFunction) {
       this.counter += dt
-      this.target[this.key] = this.fiddleFunction(
+      this.target[this.key as K] = this.fiddleFunction(
         interpolate(this.counter / this.duration, this._from, this._to, this.interpolation)
       )
     } else if (this.counter >= this.duration) {
@@ -82,7 +82,7 @@ export class SyncedTween<T, K extends keyof T, E extends T[K]> extends Tween<T, 
  */
 export class TweenSeries<T, K extends keyof T, E extends T[K]> {
   public tweens: SyncedTween<T, K, E>[] = []
-  public currentTween: SyncedTween<T, K, E>
+  public currentTween: SyncedTween<T, K, E> | undefined
   private counter: number = -1
   private startOffset: number = 0
   private easingFn: InterpolationFunction = linear
@@ -98,6 +98,7 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
 
   private ensureDurationValid() {
     if (!this.currentTween) throw new TweenError('Duration not specified')
+    return this.currentTween
   }
 
   /**
@@ -118,8 +119,8 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
    * @returns this tweenseries
    */
   and() {
-    this.ensureDurationValid()
-    const oldDuration = this.currentTween.duration
+    const oldTween = this.ensureDurationValid()
+    const oldDuration = oldTween.duration
     this.for(oldDuration)
     return this
   }
@@ -131,8 +132,8 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
    * @returns this tweenseries
    */
   change(key: K, fiddleFunction?: (n: number) => E) {
-    this.ensureDurationValid()
-    this.currentTween.change(key, fiddleFunction)
+    const currentTween = this.ensureDurationValid()
+    currentTween.change(key, fiddleFunction)
     return this
   }
 
@@ -142,8 +143,8 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
    * @returns 
    */
   to(n: number) {
-    this.ensureDurationValid()
-    this.currentTween.to(n)
+    const currentTween = this.ensureDurationValid()
+    currentTween.to(n)
     return this
   }
 
@@ -153,18 +154,18 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
    * @returns 
    */
   from(n: number) {
-    this.ensureDurationValid()
-    this.currentTween.from(n)
+    const currentTween = this.ensureDurationValid()
+    currentTween.from(n)
     return this
   }
 
   animateTo(props: { [P in K]?: number }, fiddleFunction?: (n: number) => E) {
     const keys = Object.keys(props)
-    this.ensureDurationValid()
+    const currentTween = this.ensureDurationValid()
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i] as K
       const val = props[key]
-      const currentValue = this.currentTween.target[key]
+      const currentValue = currentTween.target[key]
       if (typeof currentValue === 'number' && currentValue !== val) {
         this.change(key, fiddleFunction).from(currentValue).to(val as number).and()
       }
@@ -186,8 +187,8 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
    * @returns 
    */
   then() {
-    this.ensureDurationValid()
-    this.startOffset += this.currentTween.duration
+    const currentTween = this.ensureDurationValid()
+    this.startOffset += currentTween.duration
     return this
   }
 
@@ -197,8 +198,8 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
    * @returns 
    */
   interpolateAs(i: InterpolationFunction) {
-    this.ensureDurationValid()
-    this.currentTween.interpolateAs(i)
+    const currentTween = this.ensureDurationValid()
+    currentTween.interpolateAs(i)
     return this
   }
 
@@ -208,8 +209,8 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
    * @returns 
    */
   onDone(doneFn: CallableFunction) {
-    this.ensureDurationValid()
-    this.currentTween.done(doneFn)
+    const currentTween = this.ensureDurationValid()
+    currentTween.done(doneFn)
     return this
   }
 
@@ -231,7 +232,7 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
           this.counter - tween.start < tween.duration &&
           tween.fiddleFunction
         ) {
-          this.component[tween.key] = tween.fiddleFunction(
+          this.component[tween.key as K] = tween.fiddleFunction(
             interpolate(
               (this.counter - tween.start) / tween.duration,
               tween._from,
@@ -240,7 +241,7 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
             )
           )
           if (this.counter + dt - tween.start >= tween.duration) {
-            this.component[tween.key] = tween.fiddleFunction(
+            this.component[tween.key as K] = tween.fiddleFunction(
               interpolate(
                 1, // This way it stops EXACTLY at the end every time
                 tween._from,

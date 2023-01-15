@@ -2,8 +2,8 @@ import { Loadable } from './index'
 
 type HowlerLikeCallback = () => void | ((id: any, err: any) => void)
 export interface PlayableSound {
-  new({src: string}): PlayableSound
-  on(eventName: 'load' | 'loaderror', cb: HowlerLikeCallback)
+  new(options: {src: string | string[]}): PlayableSound
+  on(eventName: 'load' | 'loaderror', cb: HowlerLikeCallback): PlayableSound
   play(): void
   playing(): boolean
   volume(n: number): number

@@ -44,7 +44,7 @@ const getWindowDimensions = (highDPI: boolean = false) => {
   const dpi = highDPI ? window.devicePixelRatio : 1
   let width = window.innerWidth
   let height = window.innerHeight
-  return [width, height] as [number, number]
+  return [width, height, false] as [number, number, boolean]
 }
 
 /**
@@ -59,15 +59,25 @@ export const fullscreenCanvas = (
   hook: (e: UIEvent) => void = () => {},
   highDPI: boolean = false,
 ) => {
+  let seenResizeEvent = false
   let dimensions = getWindowDimensions(highDPI)
   setCanvasDimensions(element, dimensions[0], dimensions[1], highDPI)
 
   window.addEventListener('resize', (e) => {
     dimensions = getWindowDimensions(highDPI)
     setCanvasDimensions(element, dimensions[0], dimensions[1], highDPI)
+    seenResizeEvent = false
     hook(e)
   })
-  return () => dimensions
+  return () => {
+    if (!seenResizeEvent) {
+      dimensions[2] = true
+      seenResizeEvent = true
+    } else {
+      dimensions[2] = false
+    }
+    return dimensions
+  }
 }
 
 // I have to do this cause IOS reuses touch objects

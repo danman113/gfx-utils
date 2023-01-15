@@ -9,7 +9,7 @@ export default class Texture implements Loadable {
   public height = 0
   public image: HTMLImageElement
   public loaded: boolean | null = null
-  public texture: TexImageSource
+  public texture: TexImageSource | undefined
   public error: string | Event | null = null
   /**
    * Sets up a texture. Use `await image.load` to load texture

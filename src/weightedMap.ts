@@ -24,15 +24,18 @@ export default class WeightedMap<T> {
     this.size += amount - prevWeight
   }
 
-  pick() {
+  pick(): T | undefined {
     let pick = this.size * Math.random()
     // @TODO: This does not assert that the set is in smallest->largest order. Although this is technically correct, it may be harder to debug
     // @perf: This is VERY slow. By storing the cumulative weights, we can do a binary search through that set and get much better performance.
     // Updating those weights will be expensive, but we rarely update weights in these sets
+    let lastKey
     for (let [key, value] of this.weightSet) {
       pick -= value
+      lastKey = key
       if (pick < 0) return key
     }
+    return lastKey
   }
 
   /**
