@@ -1,7 +1,7 @@
 export default class WeightedMap<T> {
   public weightSet: Map<T, number>
   public size: number
-  constructor(map?: Map<T, number>) {
+  constructor(map?: Map<T, number>, private rand: () => number = Math.random) {
     // map = {foo: 32, bar: 21}
     this.weightSet = map || new Map()
     this.size = map ? this.calculateSize() : 0
@@ -25,7 +25,7 @@ export default class WeightedMap<T> {
   }
 
   pick(): T | undefined {
-    let pick = this.size * Math.random()
+    let pick = this.size * this.rand()
     // @TODO: This does not assert that the set is in smallest->largest order. Although this is technically correct, it may be harder to debug
     // @perf: This is VERY slow. By storing the cumulative weights, we can do a binary search through that set and get much better performance.
     // Updating those weights will be expensive, but we rarely update weights in these sets
@@ -42,7 +42,7 @@ export default class WeightedMap<T> {
    * Picks an element ignoring the weight
    */
   pickRandom() {
-    let pick = this.weightSet.size * Math.random()
+    let pick = this.weightSet.size * this.rand()
     for (let [key] of this.weightSet) {
       pick--
       if (pick < 0) return key

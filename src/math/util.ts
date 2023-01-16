@@ -1,6 +1,6 @@
-export const rand = (min: number, max: number): number =>
-  Math.floor(Math.random() * (max - min)) + min
-export const randFloat = (min: number, max: number): number => Math.random() * (max - min) + min
+export const rand = (min: number, max: number, random = Math.random): number =>
+  Math.floor(random() * (max - min)) + min
+export const randFloat = (min: number, max: number, random = Math.random): number => random() * (max - min) + min
 /**
  * Clamps value N from min to max
  * @param n 
