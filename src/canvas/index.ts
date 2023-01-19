@@ -231,6 +231,7 @@ export type KeyCallback = (n: string) => void
  * @param tabIndex TabIndex to assign to the element if it's a canvas
  * @returns PollingFunction
  */
+let appendedSafariFix = false
 export const setupKeyboardHandler = (
   element: HTMLElement | Window,
   onKeyDown?: KeyCallback,
@@ -242,6 +243,16 @@ export const setupKeyboardHandler = (
   const up: KeySet = new Set()
   if (element instanceof HTMLCanvasElement) {
     (element as HTMLCanvasElement).tabIndex = tabIndex
+    if (!appendedSafariFix) {
+      appendedSafariFix = true
+      const style = document.createElement('style');
+      style.innerHTML = `
+      canvas:focus {
+        outline: none;
+      }
+      `;
+      document.head.appendChild(style)
+    }
   }
   element.addEventListener('keydown', (e: Event) => {
     e.preventDefault()
