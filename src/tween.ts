@@ -4,13 +4,14 @@ import { linear } from './math/interpolate/functions'
 const noop = () => {}
 export class TweenError extends Error {}
 export default class Tween<T, K extends keyof T, E extends T[K]> {
-  public _from: number = 0
-  public _to: number = 0
+  public _from: number | (() => number) = 0
+  public _to: number | (() => number) = 0
   public duration: number = 0
   public key: K | undefined
   public interpolation: InterpolationFunction = linear
   public fiddleFunction: ((n: number) => E) | undefined // Need this to do (..., 'color', (n: number) => `rgb(${n}, 0, 0)`)
   public donefn: CallableFunction = noop
+  public updatefn: (current: E) => void = noop
   constructor(public target: T) {}
 
   for(duration: number) {
@@ -35,18 +36,23 @@ export default class Tween<T, K extends keyof T, E extends T[K]> {
     return this
   }
 
-  from(from: number) {
+  from(from: typeof this._from) {
     this._from = from
     return this
   }
 
-  to(to: number) {
+  to(to: typeof this._from) {
     this._to = to
     return this
   }
 
   done(donefn: CallableFunction) {
     this.donefn = donefn
+    return this
+  }
+
+  update(updatefn: typeof this.updatefn) {
+    this.updatefn = updatefn
     return this
   }
 }
@@ -60,9 +66,13 @@ export class PlayableTween<T, K extends keyof T, E extends T[K]> extends Tween<T
   run(dt: number) {
     if (this.counter >= 0 && this.counter < this.duration && this.fiddleFunction) {
       this.counter += dt
-      this.target[this.key as K] = this.fiddleFunction(
+      if (typeof this._from !== 'number') this._from = this._from()
+      if (typeof this._to !== 'number') this._to = this._to()
+      const value = this.fiddleFunction(
         interpolate(this.counter / this.duration, this._from, this._to, this.interpolation)
       )
+      this.target[this.key as K] = value
+      this.updatefn(value)
     } else if (this.counter >= this.duration) {
       this.donefn()
     }
@@ -142,7 +152,7 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
    * @param n 
    * @returns 
    */
-  to(n: number) {
+  to(n: number | (() => number)) {
     const currentTween = this.ensureDurationValid()
     currentTween.to(n)
     return this
@@ -153,7 +163,7 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
    * @param n 
    * @returns 
    */
-  from(n: number) {
+  from(n: number | (() => number)) {
     const currentTween = this.ensureDurationValid()
     currentTween.from(n)
     return this
@@ -215,6 +225,17 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
   }
 
   /**
+   * Callback that fires when current tween is animating
+   * @param updateFn 
+   * @returns 
+   */
+  onUpdate(updateFn: (arg: E) => void) {
+    const currentTween = this.ensureDurationValid()
+    currentTween.update(updateFn)
+    return this
+  }
+
+  /**
    * Sets the default interpolation function
    * @param i 
    * @returns 
@@ -232,7 +253,9 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
           this.counter - tween.start < tween.duration &&
           tween.fiddleFunction
         ) {
-          this.component[tween.key as K] = tween.fiddleFunction(
+          if (typeof tween._from !== 'number') tween._from = tween._from()
+          if (typeof tween._to !== 'number') tween._to = tween._to()
+          const value = tween.fiddleFunction(
             interpolate(
               (this.counter - tween.start) / tween.duration,
               tween._from,
@@ -240,8 +263,10 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
               tween.interpolation
             )
           )
+          this.component[tween.key as K] = value
+          tween.updatefn(value)
           if (this.counter + dt - tween.start >= tween.duration) {
-            this.component[tween.key as K] = tween.fiddleFunction(
+            const value = tween.fiddleFunction(
               interpolate(
                 1, // This way it stops EXACTLY at the end every time
                 tween._from,
@@ -249,6 +274,8 @@ export class TweenSeries<T, K extends keyof T, E extends T[K]> {
                 tween.interpolation
               )
             )
+            this.component[tween.key as K] = value
+            tween.updatefn(value)
             tween.donefn()
           }
         }

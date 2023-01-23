@@ -11,6 +11,7 @@ export interface Mouse {
   clicked: boolean
   wheelDeltaX: number
   wheelDeltaY: number
+  pinchZoom: boolean
 }
 
 export const createCanvas = (parent: HTMLElement = document.body): HTMLCanvasElement => {
@@ -93,6 +94,7 @@ const copyTouch = ({ clientX, clientY, identifier, force, rotationAngle, radiusX
 export const setupMouseHandlers = (element: HTMLCanvasElement): (() => Mouse) => {
   let wheelDeltaX: number
   let wheelDeltaY: number
+  let pinchZoom: boolean = false
   const mouse: Mouse = {
     x: 0,
     y: 0,
@@ -104,6 +106,7 @@ export const setupMouseHandlers = (element: HTMLCanvasElement): (() => Mouse) =>
     clicked: false,
     wheelDeltaX: 0,
     wheelDeltaY: 0,
+    pinchZoom: false,
   }
 
   let clickedThisPoll = false
@@ -149,6 +152,7 @@ export const setupMouseHandlers = (element: HTMLCanvasElement): (() => Mouse) =>
     let browserOffset = e.deltaMode === 1 ? 125 / 3 : 1
     wheelDeltaX = e.deltaX * browserOffset
     wheelDeltaY = e.deltaY * browserOffset
+    pinchZoom = Boolean(e.ctrlKey)
   })
 
   element.addEventListener('touchstart', (e) => {
@@ -206,6 +210,8 @@ export const setupMouseHandlers = (element: HTMLCanvasElement): (() => Mouse) =>
     mouse.action = downThisPoll
     mouse.wheelDeltaX = wheelDeltaX
     mouse.wheelDeltaY = wheelDeltaY
+    mouse.pinchZoom = pinchZoom
+    pinchZoom = false
     wheelDeltaX = 0
     wheelDeltaY = 0
     clickedThisPoll = false
