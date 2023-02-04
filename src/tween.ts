@@ -309,6 +309,11 @@ export class TweenManager<T> {
     }
   }
 
+  clear() {
+    this.tweenMap.clear()
+    this.tweenList.length = 0
+  }
+
   get(component: T) {
     return this.tweenMap.get(component)?.[1]
   }

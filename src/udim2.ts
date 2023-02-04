@@ -18,6 +18,17 @@ export default class UDim {
     return [scalex, offsetx, scaley, offsety]
   }
 
+  static clone(udim: UDim2) {
+    return Array.from(udim)
+  }
+
+  static copy(copiedTo: UDim2, copyFrom: UDim2) {
+    copiedTo[0] = copyFrom[0]
+    copiedTo[1] = copyFrom[1]
+    copiedTo[2] = copyFrom[2]
+    copiedTo[3] = copyFrom[3]
+  }
+
   static toSize (dim: UDim2, parent: Rectangle): vec2 {
     const [scalex, offsetx, scaley, offsety] = dim
     let x = (scalex * parent.width) + offsetx

@@ -58,15 +58,17 @@ const getWindowDimensions = (highDPI: boolean = false) => {
 export const fullscreenCanvas = (
   element: HTMLCanvasElement,
   hook: (e: UIEvent) => void = () => {},
-  highDPI: boolean = false,
+  highDPI: boolean | (() => boolean) = false,
 ) => {
   let seenResizeEvent = false
-  let dimensions = getWindowDimensions(highDPI)
-  setCanvasDimensions(element, dimensions[0], dimensions[1], highDPI)
+  const evaluatedDpi = typeof highDPI === 'function' ? highDPI() : highDPI
+  let dimensions = getWindowDimensions(evaluatedDpi)
+  setCanvasDimensions(element, dimensions[0], dimensions[1], evaluatedDpi)
 
   window.addEventListener('resize', (e) => {
-    dimensions = getWindowDimensions(highDPI)
-    setCanvasDimensions(element, dimensions[0], dimensions[1], highDPI)
+    const evaluatedDpi = typeof highDPI === 'function' ? highDPI() : highDPI
+    dimensions = getWindowDimensions(evaluatedDpi)
+    setCanvasDimensions(element, dimensions[0], dimensions[1], evaluatedDpi)
     seenResizeEvent = false
     hook(e)
   })
