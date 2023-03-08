@@ -53,8 +53,8 @@ export default class UDim {
     return temp
   }
   static setOffset(dim: UDim2, x: number, y: number): UDim2 {
-    dim[1] = x || dim[1]
-    dim[3] = y || dim[3]
+    dim[1] = x ?? dim[1]
+    dim[3] = y ?? dim[3]
     return dim
   }
   static getScale (dim: UDim2): vec2 {
@@ -63,8 +63,8 @@ export default class UDim {
     return temp
   }
   static setScale(dim: UDim2, x: number, y: number): UDim2 {
-    dim[0] = x || dim[0]
-    dim[2] = y || dim[2]
+    dim[0] = x ?? dim[0]
+    dim[2] = y ?? dim[2]
     return dim
   }
 }
